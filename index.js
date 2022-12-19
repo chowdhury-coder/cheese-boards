@@ -3,5 +3,7 @@ const { Cheese } = require("./models/CheeseModel")
 const { Board } = require("./models/BoardModel")
 
 
+// Multiple Boards can be added to a User.
+User.hasMany(Board)
 
 module.exports = { User, Cheese, Board }
