@@ -1,7 +1,7 @@
 const { sequelize } = require("../database")
 const { DataTypes } = require("sequelize")
 
-const CheeseModel = sequelize.define('Cheese', {
+const Cheese = sequelize.define('Cheese', {
     // Model attributes are defined here
     title: {
       type: DataTypes.STRING
@@ -13,4 +13,4 @@ const CheeseModel = sequelize.define('Cheese', {
     // Other model options go here
 });
 
-module.exports = { CheeseModel }
+module.exports = { Cheese }
