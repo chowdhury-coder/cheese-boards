@@ -137,4 +137,44 @@ describe("Cheese Board Test", () => {
         expect(await board.countCheeses()).toBe(4)
     })
 
+    test("Test: Many to Many association - A cheese can be on many boards", async ()=>{
+        const cheese = await Cheese.create({
+            title: 'Brie',
+            description:'Whitish'
+        })
+        const board_1 = await Board.create({
+            type:"Glass",
+            description: "Rectangular in shape",
+            rating:5
+        })
+        const board_2 = await Board.create({
+            type:"Bronze",
+            description: "Smooth in texture and triangular in shape",
+            rating:7
+        })
+        const board_3 = await Board.create({
+            type:"Gold",
+            description: "Glossy and shiny and spherical in shape",
+            rating:10
+        })
+        const board_4 = await Board.create({
+            type:"Wood",
+            description: "Rough",
+            rating:4
+        })
+        const board_5 = await Board.create({
+            type:"Iron",
+            description: "Brittle and Hard",
+            rating:6
+        })
+
+        await cheese.addBoards([board_1, board_2, board_3, board_4, board_5])
+
+        const cheeseBoards = await cheese.getBoards()
+
+        expect(cheese instanceof Board).toBe(false)
+        expect(cheese instanceof Cheese).toBe(true)
+        expect(board_5 instanceof Board).toBe(true)
+        expect(await cheese.countBoards()).toBe(5)
+    })
 })
