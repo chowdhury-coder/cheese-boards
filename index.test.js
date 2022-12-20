@@ -1,5 +1,7 @@
 const { User, Board, Cheese } = require("./index")
 const { sequelize } = require("./database")
+const { DataTypes } = require("sequelize")
+
 
 describe("Cheese Board Test", () => {
 
@@ -50,6 +52,47 @@ describe("Cheese Board Test", () => {
         expect(board.type).toBe("Glass")
         expect(board.description).toBe("Rectangular in shape")
         expect(board.rating).toBe(5)
+    })
+
+    test("Test: Multiple Boards can be added to a User.", async ()=>{
+        const user = await User.create({
+            name: "Mohammed Chowdhury",
+            email: "mohammad.chowdhury@clover.com"
+        })
+
+        const board_1 = await Board.create({
+            type:"Glass",
+            description: "Rectangular in shape",
+            rating:5
+        })
+
+        const board_2 = await Board.create({
+            type:"Bronze",
+            description: "Smooth in texture and triangular in shape",
+            rating:7
+        })
+        const board_3 = await Board.create({
+            type:"Gold",
+            description: "Glossy and shiny and spherical in shape",
+            rating:10
+        })
+
+        // Special methods/mixins added to instances
+        await user.addBoards([board_1, board_2, board_3])
+
+        // Special methods/mixins added to instances to get the boards associated with user
+        const userBoards = await user.getBoards()
+
+        expect(userBoards[0].type).toBe("Glass")
+        expect(userBoards[1].type).toBe("Bronze")
+        expect(userBoards[2].rating).toBe(10)
+        expect(userBoards[2].description).toBe("Glossy and shiny and spherical in shape")
+        expect(await user.countBoards()).toBe(3)
+
+        // Un-associate all previously associated bars
+        await user.setBoards([]);
+        
+        expect(await user.getBoards()).toEqual([])
     })
 
 })
