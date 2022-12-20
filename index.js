@@ -7,4 +7,8 @@ const { Board } = require("./models/BoardModel")
 Board.belongsTo(User)
 User.hasMany(Board)
 
+// Many to Many association - A board can have many cheeses, and a cheese can be on many boards
+Board.belongsToMany(Cheese, {through: "Board_Cheese"});
+Cheese.belongsToMany(Board, {through: "Board_Cheese"});
+
 module.exports = { User, Cheese, Board }
