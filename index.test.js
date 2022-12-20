@@ -95,4 +95,46 @@ describe("Cheese Board Test", () => {
         expect(await user.getBoards()).toEqual([])
     })
 
+
+    test("Test: Many to Many association - A board can have many cheeses", async ()=>{
+        const board = await Board.create({
+            type:"Gem",
+            description: "Polished and shiny and rectangular in shape",
+            rating:10
+        })
+
+        const cheese_1 = await Cheese.create({
+            title: 'Chedar',
+            description:'Yellow and semi soft'
+        })
+        const cheese_2 = await Cheese.create({
+            title: 'Fetah',
+            description:'Hard'
+        })
+        const cheese_3 = await Cheese.create({
+            title: 'Brie',
+            description:'Whitish'
+        })
+        const cheese_4 = await Cheese.create({
+            title: 'Blue Cheese',
+            description:'Blue'
+        })
+
+        // Special methods/mixins added to instance
+        await board.addCheeses([cheese_1, cheese_2, cheese_3, cheese_4])
+
+        // Special methods/mixins added to instances to get the cheese associated with board
+        const cheeseBoards = await board.getCheeses()
+        
+        expect(cheeseBoards[0].title).toBe("Chedar")
+        expect(cheeseBoards[0].description).toBe("Yellow and semi soft")
+        expect(cheeseBoards[1].title).toBe("Fetah")
+        expect(cheeseBoards[1].description).toBe("Hard")
+        expect(cheeseBoards[2].title).toBe("Brie")
+        expect(cheeseBoards[2].description).toBe("Whitish")
+        expect(cheeseBoards[3].title).toBe("Blue Cheese")
+        expect(cheeseBoards[3].description).toBe("Blue")
+        expect(await board.countCheeses()).toBe(4)
+    })
+
 })
