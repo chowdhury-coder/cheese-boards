@@ -177,4 +177,39 @@ describe("Cheese Board Test", () => {
         expect(board_5 instanceof Board).toBe(true)
         expect(await cheese.countBoards()).toBe(5)
     })
+
+
+    test("Test: Eager Loading - Board can be loaded with cheese", async ()=>{
+        const board = await Board.create({
+            type:"Gold",
+            description: "Glossy and shiny and spherical in shape",
+            rating:10
+        })
+
+        const cheese_1 = await Cheese.create({
+            title: 'Chedar',
+            description:'Yellow and semi soft'
+        })
+        const cheese_2 = await Cheese.create({
+            title: 'Fetah',
+            description:'Hard'
+        })
+        const cheese_3 = await Cheese.create({
+            title: 'Brie',
+            description:'Whitish'
+        })
+        const cheese_4 = await Cheese.create({
+            title: 'Blue Cheese',
+            description:'Blue'
+        })
+
+        await board.addCheeses([cheese_1, cheese_2, cheese_3, cheese_4])
+
+        const boardCheeses = await Board.findOne({
+            include: Cheese
+        })
+
+        expect(boardCheeses.Cheeses[3].title).toBe("Blue Cheese")
+        expect(boardCheeses.Cheeses.length).toEqual(4)
+    })
 })
